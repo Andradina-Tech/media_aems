@@ -11,6 +11,30 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. Render inicial
   renderSidebar();
   renderMainView();
+  // ─── Mobile Menu Toggle ────────────────────────────────────────────────────
+
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  
+  function openMobileMenu() {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('open');
+  }
+
+  function closeMobileMenu() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('open');
+  }
+
+  document.getElementById('btn-menu-toggle').addEventListener('click', openMobileMenu);
+  sidebarOverlay.addEventListener('click', closeMobileMenu);
+
+  // Fecha o menu mobile quando clica em uma disciplina (renderSidebar cuida disso via delegação, mas podemos garantir aqui)
+  document.getElementById('disciplinas-list').addEventListener('click', (e) => {
+    if (e.target.closest('.disc-item') && window.innerWidth <= 640) {
+      closeMobileMenu();
+    }
+  });
 
   // ─── Sidebar ───────────────────────────────────────────────────────────────
 

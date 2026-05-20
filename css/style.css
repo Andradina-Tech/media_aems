@@ -769,8 +769,258 @@ input[type="number"]::placeholder { color: var(--text-muted); }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* ─── Responsividade ─────────────────────────────────────────── */
+
+/* ── Botão hamburguer (visível só no mobile) ── */
+#btn-menu-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition);
+}
+#btn-menu-toggle:hover { background: var(--bg-tertiary); border-color: var(--accent); }
+
+/* ── Topbar mobile (aparece só em telas pequenas) ── */
+#mobile-topbar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+#mobile-topbar .logo-icon {
+  width: 30px; height: 30px; font-size: 14px;
+}
+#mobile-topbar .logo-title { font-size: 14px; font-weight: 700; }
+#mobile-topbar .logo-subtitle { font-size: 10px; }
+
+/* ── Overlay escuro por trás do drawer ── */
+#sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 49;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease;
+}
+#sidebar-overlay.open { display: block; }
+
+/* ══════════════════════════════════════════════════════════════
+   TABLET  (641px – 900px)
+   Sidebar fica visível mas mais estreita
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) and (min-width: 641px) {
+  :root { --sidebar-w: 210px; }
+
+  #disc-nome { font-size: 16px; }
+
+  .tab-btn { padding: 8px 12px; font-size: 12px; }
+
+  .summary-card { min-width: 110px; padding: 12px 14px; }
+  .summary-value { font-size: 22px; }
+
+  #disciplina-header { padding: 12px 16px; }
+  #tabs-nav { padding: 10px 16px 0; }
+  .tab-panel { padding: 16px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE  (≤ 640px)
+   Sidebar vira drawer deslizante
+   ══════════════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
-  :root { --sidebar-w: 200px; }
-  #disciplina-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .resultados-summary { flex-direction: column; }
+
+  /* Layout geral */
+  #app {
+    flex-direction: column;
+    height: 100dvh;       /* dynamic viewport height — melhor para mobile */
+    overflow: hidden;
+  }
+
+  /* Topbar mobile visível */
+  #mobile-topbar { display: flex; }
+
+  /* Botão hamburguer visível */
+  #btn-menu-toggle { display: flex; align-items: center; justify-content: center; }
+
+  /* Sidebar: drawer fora da tela por padrão */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 280px;
+    min-width: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 32px rgba(0,0,0,0.6);
+  }
+
+  #sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Main ocupa toda a tela abaixo da topbar */
+  #main {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header da disciplina */
+  #disciplina-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .header-info { gap: 8px; flex-wrap: wrap; }
+
+  #disc-nome { font-size: 16px; }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .header-actions button {
+    flex: 1;
+    justify-content: center;
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  /* Tabs: rolar horizontalmente se não couber */
+  #tabs-nav {
+    padding: 8px 8px 0;
+    overflow-x: auto;
+    flex-shrink: 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  #tabs-nav::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Tab panels */
+  .tab-panel { padding: 14px; }
+
+  /* Subtabs Notas */
+  #notas-subtabs { gap: 6px; margin-bottom: 14px; }
+  .subtab-btn { padding: 7px 16px; font-size: 13px; flex: 1; text-align: center; }
+
+  /* Config sections */
+  .config-section { padding: 14px; }
+
+  /* Linha de avaliação: empilha nome acima do peso em telas muito pequenas */
+  .av-row {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 0;
+  }
+  .av-nome { min-width: 120px; }
+
+  /* Provão config */
+  .provao-config { flex-wrap: wrap; gap: 8px; }
+
+  /* Resumo de resultados */
+  .resultados-summary {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .summary-card { min-width: 0; }
+  .summary-value { font-size: 24px; }
+
+  /* Tabelas: scroll horizontal com toque */
+  #table-notas-p1,
+  #table-notas-p2,
+  #resultados-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Nota inputs maiores para dedos */
+  .nota-input { width: 56px; padding: 6px 4px; font-size: 14px; }
+
+  /* Modais: ocupam tela toda no mobile */
+  .modal {
+    max-width: none;
+    width: calc(100% - 24px);
+    margin: 12px;
+    padding: 20px;
+    border-radius: var(--radius);
+  }
+
+  .modal-overlay {
+    align-items: flex-end;      /* modal "sobe" da base da tela */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .modal {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 100%;
+    margin: 0;
+    animation: slideUpMobile 0.25s ease;
+  }
+
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* Toast: ocupa mais largura */
+  #toast-container {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+  }
+  .toast { max-width: none; }
+
+  /* Inputs maiores — area de toque confortável */
+  input[type="text"],
+  input[type="number"] {
+    padding: 10px 12px;
+    font-size: 16px; /* evita zoom automático do iOS */
+  }
+
+  /* Empty state */
+  #empty-state h2 { font-size: 17px; }
+  #empty-state p  { font-size: 13px; text-align: center; padding: 0 16px; }
+  .empty-icon { font-size: 44px; }
+
+  /* Tabela de alunos */
+  .data-table th,
+  .data-table td { padding: 8px 8px; }
+  .td-nome { min-width: 100px; }
+
+  /* Botões da sidebar footer: empilhados */
+  #sidebar-footer { gap: 8px; }
+}
+
+/* ── Safe area para iPhones com notch ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #mobile-topbar {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+  #sidebar-footer {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
 }

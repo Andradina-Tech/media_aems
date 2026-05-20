@@ -178,7 +178,8 @@ const state = {
 ## Componentes da Interface
 
 ### Layout
-```
+```text
+[Desktop]
 ┌─────────────────────────────────────────┐
 │  SIDEBAR (240px fixo)  │  MAIN (flex)   │
 │  ─────────────────────  │  ─────────────│
@@ -191,6 +192,11 @@ const state = {
 │  ─────────────────────  │               │
 │  [Exportar] [Importar]  │               │
 └─────────────────────────────────────────┘
+
+[Mobile]
+- Topbar fixa com botão Hamburguer
+- Sidebar atua como Gaveta (Drawer) com overlay
+- Tabelas e abas utilizam scroll horizontal
 ```
 
 ### Abas da Disciplina
@@ -310,6 +316,7 @@ init()                     // ponto de entrada, DOMContentLoaded
 | Arredondamento só no resultado | Preservar precisão durante o cálculo intermediário |
 | Separação calc.js | Permite testar as funções de cálculo isoladamente |
 | Ordem scripts no HTML | Garante que dependências estejam disponíveis (sem module system) |
+| Responsividade Nativa | Sidebar em drawer e touch-targets maiores para uso diário em celulares |
 
 ---
 
@@ -317,6 +324,7 @@ init()                     // ponto de entrada, DOMContentLoaded
 
 | Versão | Data | Descrição |
 |--------|------|-----------|
+| 1.1.0 | 2026-05-20 | Suporte completo a dispositivos móveis (responsividade, sidebar drawer, tabelas touch) |
 | 1.0.0 | 2026-05-19 | Versão inicial – CRUD disciplinas/alunos, P1/P2, export/import JSON |
 
 ---
