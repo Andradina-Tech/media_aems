@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEMS Notas – Gestão de Notas por Disciplina</title>
+  <meta name="description" content="Sistema de gerenciamento de notas para professores da AEMS – Três Lagoas. Configure P1, P2 e Provão por disciplina.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside id="sidebar">
+
+    <div id="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">A</div>
+        <div class="logo-text">
+          <span class="logo-title">AEMS Notas</span>
+          <span class="logo-subtitle">Três Lagoas – MS</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="sidebar-actions">
+      <button class="btn-primary full-width" id="btn-nova-disciplina">
+        + Nova Disciplina
+      </button>
+    </div>
+
+    <div id="disciplinas-list">
+      <!-- Renderizado por ui.js -->
+    </div>
+
+    <div id="sidebar-footer">
+      <button class="btn-ghost" id="btn-export">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Exportar JSON
+      </button>
+      <button class="btn-ghost" id="btn-import">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Importar JSON
+      </button>
+      <input type="file" id="file-input" accept=".json" style="display:none">
+    </div>
+
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main id="main">
+
+    <!-- Empty State -->
+    <div id="empty-state">
+      <div class="empty-icon">📚</div>
+      <h2>Nenhuma disciplina selecionada</h2>
+      <p>Selecione uma disciplina ou crie uma nova para começar.</p>
+      <button class="btn-primary" id="btn-nova-disciplina-2">+ Nova Disciplina</button>
+    </div>
+
+    <!-- Disciplina View -->
+    <div id="disciplina-view" class="hidden">
+
+      <!-- Header -->
+      <header id="disciplina-header">
+        <div class="header-info">
+          <h2 id="disc-nome">–</h2>
+          <span id="disc-turma" class="badge">–</span>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary" id="btn-edit-disciplina">✏️ Editar</button>
+          <button class="btn-danger"    id="btn-delete-disciplina">🗑️ Excluir</button>
+        </div>
+      </header>
+
+      <!-- Tab navigation -->
+      <div id="tabs-nav">
+        <button class="tab-btn active" data-tab="config">⚙️ Configuração</button>
+        <button class="tab-btn"        data-tab="alunos">👥 Alunos</button>
+        <button class="tab-btn"        data-tab="notas">📝 Notas</button>
+        <button class="tab-btn"        data-tab="resultados">📊 Resultados</button>
+      </div>
+
+      <!-- ─── Tab: Configuração ─── -->
+      <div id="tab-config" class="tab-panel active">
+
+        <!-- P1 -->
+        <div class="config-section">
+          <div class="section-header">
+            <h3>P1 – Avaliações</h3>
+            <button class="btn-small" id="btn-add-p1-av">+ Adicionar</button>
+          </div>
+          <div class="weight-indicator" id="p1-weight-indicator"></div>
+          <div id="p1-avaliacoes-list"></div>
+        </div>
+
+        <!-- P2 -->
+        <div class="config-section">
+          <div class="section-header">
+            <h3>P2 – Avaliações</h3>
+            <button class="btn-small" id="btn-add-p2-av">+ Adicionar</button>
+          </div>
+          <div class="provao-config">
+            <label>Peso do Provão na P2:</label>
+            <div class="provao-input-group">
+              <input type="number" id="provao-peso" min="0" max="100" step="5" value="20">
+              <span>%</span>
+            </div>
+          </div>
+          <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
+            As demais avaliações abaixo dividem os <span id="p2-restante">80</span>% restantes da P2.
+          </p>
+          <div class="weight-indicator" id="p2-weight-indicator"></div>
+          <div id="p2-avaliacoes-list"></div>
+        </div>
+
+      </div>
+
+      <!-- ─── Tab: Alunos ─── -->
+      <div id="tab-alunos" class="tab-panel">
+        <div class="section-header" style="margin-bottom:16px;">
+          <h3 style="font-size:15px;font-weight:700;">Alunos da Turma</h3>
+          <button class="btn-small" id="btn-add-aluno">+ Adicionar Aluno</button>
+        </div>
+        <div id="alunos-list"></div>
+      </div>
+
+      <!-- ─── Tab: Notas ─── -->
+      <div id="tab-notas" class="tab-panel">
+        <div id="notas-subtabs">
+          <button class="subtab-btn active" data-subtab="notas-p1">P1</button>
+          <button class="subtab-btn"        data-subtab="notas-p2">P2</button>
+        </div>
+        <div id="notas-p1" class="subtab-panel active">
+          <div id="table-notas-p1"></div>
+        </div>
+        <div id="notas-p2" class="subtab-panel">
+          <div id="table-notas-p2"></div>
+        </div>
+      </div>
+
+      <!-- ─── Tab: Resultados ─── -->
+      <div id="tab-resultados" class="tab-panel">
+        <div id="resultados-table"></div>
+      </div>
+
+    </div><!-- /disciplina-view -->
+
+  </main>
+
+</div><!-- /app -->
+
+<!-- ═══ MODAL: Disciplina ═══ -->
+<div id="modal-disciplina" class="modal-overlay hidden" role="dialog" aria-labelledby="modal-disciplina-title">
+  <div class="modal">
+    <h3 id="modal-disciplina-title">Nova Disciplina</h3>
+    <div class="form-group">
+      <label for="modal-disc-nome">Nome da Disciplina</label>
+      <input type="text" id="modal-disc-nome" placeholder="Ex: Cálculo I" maxlength="80" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label for="modal-disc-turma">Turma</label>
+      <input type="text" id="modal-disc-turma" placeholder="Ex: Eng. Civil – 2026/1" maxlength="60" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="modal-disc-cancel">Cancelar</button>
+      <button class="btn-primary"   id="modal-disc-save">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Aluno ═══ -->
+<div id="modal-aluno" class="modal-overlay hidden" role="dialog" aria-labelledby="modal-aluno-title">
+  <div class="modal">
+    <h3 id="modal-aluno-title">Novo Aluno</h3>
+    <div class="form-group">
+      <label for="modal-aluno-nome">Nome completo</label>
+      <input type="text" id="modal-aluno-nome" placeholder="Ex: João da Silva" maxlength="100" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label for="modal-aluno-ra">RA (Registro Acadêmico)</label>
+      <input type="text" id="modal-aluno-ra" placeholder="Ex: 2023001" maxlength="20" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="modal-aluno-cancel">Cancelar</button>
+      <button class="btn-primary"   id="modal-aluno-save">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Confirmar ═══ -->
+<div id="modal-confirm" class="modal-overlay hidden" role="dialog">
+  <div class="modal">
+    <h3>Confirmar ação</h3>
+    <p id="confirm-msg"></p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="confirm-cancel">Cancelar</button>
+      <button class="btn-danger"    id="confirm-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div id="toast-container" role="status" aria-live="polite"></div>
+
+<!-- Scripts (ordem de dependência) -->
+<script src="js/calc.js"></script>
+<script src="js/data.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
