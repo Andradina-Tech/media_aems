@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AEMS Notas – Gestão de Notas por Disciplina</title>
   <meta name="description" content="Sistema de gerenciamento de notas para professores da AEMS – Três Lagoas. Configure P1, P2 e Provão por disciplina.">
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -228,6 +229,21 @@
 
 <!-- ═══ TOAST ═══ -->
 <div id="toast-container" role="status" aria-live="polite"></div>
+
+<!-- ═══ PWA INSTALL BANNER ═══ -->
+<div id="install-banner" class="install-banner hidden">
+  <div class="install-banner-content">
+    <div class="install-banner-icon">A</div>
+    <div class="install-banner-text">
+      <h4>Instalar AEMS Notas</h4>
+      <p>Acesse suas notas offline e mais rápido como um aplicativo.</p>
+    </div>
+  </div>
+  <div class="install-banner-actions">
+    <button id="btn-install-close" class="btn-ghost-small">Agora não</button>
+    <button id="btn-install-app" class="btn-primary-small">Instalar</button>
+  </div>
+</div>
 
 <!-- Scripts (ordem de dependência) -->
 <script src="js/calc.js"></script>

@@ -302,4 +302,73 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('modal-confirm').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) document.getElementById('modal-confirm').classList.add('hidden');
   });
+
+  // ─── PWA & Install Prompt ──────────────────────────────────────────────────
+
+  // 1. Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('Service Worker registrado:', reg.scope))
+        .catch(err => console.error('Erro ao registrar Service Worker:', err));
+    });
+  }
+
+  // 2. Custom Install Promotion
+  let deferredPrompt = null;
+  const installBanner = document.getElementById('install-banner');
+  const btnInstallApp = document.getElementById('btn-install-app');
+  const btnInstallClose = document.getElementById('btn-install-close');
+
+  function showInstallBanner() {
+    if (installBanner) {
+      installBanner.classList.remove('hidden');
+    }
+  }
+
+  function hideInstallBanner() {
+    if (installBanner) {
+      installBanner.classList.add('hidden');
+    }
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Evita o prompt automático padrão do Chrome / Edge
+    e.preventDefault();
+    // Armazena o evento para ser disparado pelo botão customizado
+    deferredPrompt = e;
+    // Só exibe se o usuário não tiver rejeitado/fechado recentemente nas últimas visitas
+    const isDismissed = localStorage.getItem('aems_install_dismissed');
+    if (!isDismissed) {
+      showInstallBanner();
+    }
+  });
+
+  if (btnInstallApp) {
+    btnInstallApp.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      // Dispara o prompt do navegador
+      deferredPrompt.prompt();
+      // Aguarda a resposta do usuário
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`Escolha de instalação do usuário: ${outcome}`);
+      // Limpa o prompt
+      deferredPrompt = null;
+      hideInstallBanner();
+    });
+  }
+
+  if (btnInstallClose) {
+    btnInstallClose.addEventListener('click', () => {
+      hideInstallBanner();
+      // Armazena no localStorage que o usuário fechou o banner para não incomodá-lo
+      localStorage.setItem('aems_install_dismissed', 'true');
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    console.log('Aplicativo instalado com sucesso!');
+    hideInstallBanner();
+    deferredPrompt = null;
+  });
 });

@@ -1024,3 +1024,125 @@ input[type="number"]::placeholder { color: var(--text-muted); }
     padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
 }
+
+/* ─── PWA Install Banner ───────────────────────────────────── */
+.install-banner {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  background: rgba(28, 33, 40, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  width: 320px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  animation: slideInBanner 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.install-banner.hidden {
+  display: none !important;
+}
+
+.install-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.install-banner-icon {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 0 15px var(--accent-glow);
+  flex-shrink: 0;
+}
+
+.install-banner-text h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.install-banner-text p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.install-banner-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-ghost-small {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: color var(--transition), background var(--transition);
+}
+
+.btn-ghost-small:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.btn-primary-small {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.4);
+  transition: background var(--transition), transform var(--transition);
+}
+
+.btn-primary-small:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+}
+
+@keyframes slideInBanner {
+  from {
+    transform: translateY(100px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .install-banner {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+}

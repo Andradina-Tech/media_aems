@@ -69,12 +69,17 @@ As notas individuais lançadas **não** são arredondadas — apenas os resultad
 | Lógica | JavaScript ES6+ puro (sem framework) |
 | Fonte | Google Fonts – Inter |
 | Persistência | `localStorage` (cache) + arquivo JSON (backup/Google Drive) |
+| PWA | Web App Manifest + Service Worker (caching offline) |
 
 ### Estrutura de Arquivos
 ```
 Notas/
 ├── context.md            ← Este arquivo
 ├── index.html            ← Aplicação principal (single-page)
+├── manifest.json         ← Metadados do PWA
+├── sw.js                 ← Service Worker (caching/offline)
+├── icon.svg              ← Ícone da PWA
+├── icon-maskable.svg     ← Ícone mascarável para PWA
 ├── css/
 │   └── style.css         ← Design system completo (variáveis, componentes, layout)
 └── js/
@@ -324,6 +329,7 @@ init()                     // ponto de entrada, DOMContentLoaded
 
 | Versão | Data | Descrição |
 |--------|------|-----------|
+| 1.2.0 | 2026-05-22 | Transformação do app em PWA (offline, manifest, sw, ícones SVG) e banner customizado para instalação |
 | 1.1.0 | 2026-05-20 | Suporte completo a dispositivos móveis (responsividade, sidebar drawer, tabelas touch) |
 | 1.0.0 | 2026-05-19 | Versão inicial – CRUD disciplinas/alunos, P1/P2, export/import JSON |
 
